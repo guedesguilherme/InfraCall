@@ -14,3 +14,10 @@ Para instalar:
 6 - npm i
 
 7 - npm run dev
+
+
+
+Tecnologias:
+- NodeJS;
+- ReactJS;
+- MySQL
