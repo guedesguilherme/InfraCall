@@ -1,16 +1,28 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const cors = require("cors");
+const cors = require('cors');
 
-// Importar o controlador de usuário
-const usuarioController = require("./controller/usuarios");
+// Importar os controladores
+const usuarioController = require('./controller/usuarios');
+const formController = require('./controller/forms');
+const infoChamados = require('./controller/infoChamados');
+const AdminController = require('./controller/admin'); 
 
 // Configurar middlewares
 app.use(express.json());
 app.use(cors());
 
-//Rota raiz
-app.use("/", usuarioController);
+// Rotas
+app.use('/user', usuarioController);
+app.use('/form', formController);
+app.use('/info', infoChamados);
+app.use('/admin', AdminController);
+
+
+// Rota raiz para teste
+app.get('/', (req, res) => {
+    res.status(200).send({ message: 'Hello World' });
+});
 
 // Configurar a porta do servidor
 const PORT = process.env.PORT || 3000;

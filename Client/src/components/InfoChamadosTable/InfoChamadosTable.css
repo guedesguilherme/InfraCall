@@ -1,0 +1,34 @@
+.info-chamados-container {
+    padding: 2rem;
+    width: 80%;
+}
+
+.info-chamados-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.info-chamados-table th, .info-chamados-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.info-chamados-table tr.even {
+    background-color: #f9f9f9; /* Cor de fundo para linhas pares */
+}
+
+.info-chamados-table tr.odd {
+    background-color: #ffffff; /* Cor de fundo para linhas ímpares */
+}
+
+.info-chamados-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.select-info-calls {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}

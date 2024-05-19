@@ -1,7 +1,7 @@
-const db = require("./db");
+const db = require("../Database/db");
 
 const Usuarios = db.sequelize.define('usuarios', {
-    id: {
+    user_id: {
         type: db.Sequelize.INTEGER,
         autoIncrement: true,
         allowNull: false,
@@ -15,14 +15,6 @@ const Usuarios = db.sequelize.define('usuarios', {
             isEmail: true
         }
     },
-    senha: {
-        type: db.Sequelize.STRING(200),
-        allowNull: false
-    },
-    setor: {
-        type: db.Sequelize.STRING(45),
-        allowNull: false
-    },
     nome: {
         type: db.Sequelize.STRING(45),
         allowNull: false
@@ -30,8 +22,20 @@ const Usuarios = db.sequelize.define('usuarios', {
     sobrenome: {
         type: db.Sequelize.STRING(45),
         allowNull: false
+    },
+    setor: {
+        type: db.Sequelize.STRING(45),
+        allowNull: false
+    },
+    senha: {
+        type: db.Sequelize.STRING(200),
+        allowNull: false
     }
-    
-}, { freezeTableName: true });
+
+}, { freezeTableName: true,
+    tableName: "usuarios"
+ });
+
+//Usuarios.sync({ force: false });
 
 module.exports = Usuarios;

@@ -9,25 +9,57 @@ import {
 import './index.css'
 
 //importando componentes
-import Cadastro from './pages/Usuários/Cadastro.jsx'
-import Login from "./pages/Usuários/Login.jsx"
-import Form from './pages/Usuários/Form.jsx'
+import Home from './pages/Home/Home.jsx'
+
+  //Componentes de usuário
+  import Cadastro from './pages/Usuários/Cadastro/Cadastro.jsx'
+  import Login from "./pages/Usuários/Login/Login.jsx"
+  import Form from './pages/Usuários/Form/Form.jsx'
+
+  //Componentes de administrador
+  import CadastroAdmin from './pages/Admins/Cadastro/Cadastro.jsx'
+  import LoginAdmin from './pages/Admins/Login/LoginAdmin.jsx'
+  import HomeAdmin from './pages/Admins/Home/HomeAdmin.jsx'
+  import HomeDoneTable from './pages/Admins/Home/HomeDoneTable/HomeDoneTable.jsx'
 
 const router = createBrowserRouter([
   {
     element: <App/>,
     children: [
       {
-        path: "/usuario/cadastro",
+        path: "/",
+        element: <Home/>
+      },
+      //Caminhos do usuário
+      {
+        path: "/user/post",
         element: <Cadastro/>
       },
       {
-        path: "/usuario/login",
+        path: "/user/post/login",
         element: <Login/>
       },
+      //Caminhos do formulário
       {
-        path: "/usuario/form",
+        path: "/form/post",
         element: <Form/>
+      },
+      //Caminhos do Administrador
+      {
+        path: "/admin/post",
+        element: <CadastroAdmin/>
+      },
+      {
+        path: "/admin/post/login",
+        element: <LoginAdmin/>
+      },
+      {
+        path: "/admin/home",
+        element: <HomeAdmin/>
+      },
+      {
+        path: "/admin/home/done",
+        element: <HomeDoneTable/>
       },
     ]
 }

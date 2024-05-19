@@ -1,0 +1,34 @@
+.nav-admin-control{
+    display: flex;
+    margin-left: 80%;
+    margin-bottom: 2rem;
+    gap: 2rem;
+}
+
+.nav-admin-1{
+    padding: 1rem;
+    background: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: gray;
+    border: 3px solid gray;
+    border-radius: 10px;
+}
+
+.nav-admin-2{
+    padding: 1rem;
+    background: gray;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    border-radius: 10px;
+}
+
+.nav-admin-1 a{
+    background: none;
+    color: gray;
+}
+.nav-admin-2 a{
+    background: none;
+    color: white;
+}

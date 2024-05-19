@@ -1,25 +1,27 @@
-import AppFetch from '../../axios/config';
+import AppFetch from '../../../axios/config';
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import "./Cadastro.css"
+import NavAdmin from '../../../components/NavAdmin/NavAdmin';
 
-const Cadastro = () => {
+import "./CadastroAdmin.css"
+
+const CadastroAdmin = () => {
 
     const [error, setError] = useState('');
 
     const navigate = useNavigate();
 
     const formik = useFormik({
-    initialValues: {
-        nome: '',
-        sobrenome: '',
-        email: '',
-        senha: '',
-        confirmacaoSenha: '',
-        setor: ''
+        initialValues: {
+            nome: '',
+            sobrenome: '',
+            email: '',
+            senha: '',
+            confirmacaoSenha: '',
+            setor: ''
     },
 
     validationSchema: Yup.object({
@@ -40,23 +42,22 @@ const Cadastro = () => {
     }),
     onSubmit: async (values) => {
         try {
-        const response = await AppFetch.post('/usuario/cadastro', values)
-        alert('Usuário cadastrado com sucesso!');
-
-        
+            const response = await AppFetch.post('/admin/post', values)
+            alert('Administrador cadastrado com sucesso!');
+   
         } catch (error) {
-        setError(error.message);
+            setError(error.message);
         }
 
-        navigate("/usuario/login")
+        navigate("/admin/post/login")
     }
     });
 
     return (
     <div className='container'>
-
+        <NavAdmin></NavAdmin>
         <div className="inner-container">
-            <h1>Cadastro de Usuário</h1>
+            <h1>Cadastro de Administrador</h1>
             <form onSubmit={formik.handleSubmit}>
 
             <div className="form-control">
@@ -67,6 +68,7 @@ const Cadastro = () => {
                     <div className='error-message'>{formik.errors.nome}</div>
                     ) : null}
                 </div>
+
                 <div className='input-control'>
                     <label htmlFor="sobrenome">Sobrenome:</label>
                     <input id="sobrenome" type="text" {...formik.getFieldProps('sobrenome')} />
@@ -74,6 +76,7 @@ const Cadastro = () => {
                     <div className='error-message'>{formik.errors.sobrenome}</div>
                     ) : null}
                 </div>
+
                 <div className='input-control'>
                     <label htmlFor="email">E-mail:</label>
                     <input id="email" type="email" {...formik.getFieldProps('email')} />
@@ -81,6 +84,7 @@ const Cadastro = () => {
                     <div className='error-message'>{formik.errors.email}</div>
                     ) : null}
                 </div>
+
                 <div className='input-control'>
                     <label htmlFor="senha">Senha:</label>
                     <input id="senha" type="password" {...formik.getFieldProps('senha')} />
@@ -88,6 +92,7 @@ const Cadastro = () => {
                     <div className='error-message'>{formik.errors.senha}</div>
                     ) : null}
                 </div>
+
                 <div className='input-control'>
                     <label htmlFor="confirmacaoSenha">Confirme a Senha:</label>
                     <input id="confirmacaoSenha" type="password" {...formik.getFieldProps('confirmacaoSenha')} />
@@ -95,14 +100,20 @@ const Cadastro = () => {
                     <div className='error-message'>{formik.errors.confirmacaoSenha}</div>
                     ) : null}
                 </div>
-                <div className='input-control'>
-                    <label htmlFor="setor">Setor:</label>
-                    <input id="setor" type="text" {...formik.getFieldProps('setor')} />
+
+                <div>
+                    <label htmlFor="setor">Selecione o seu setor:</label>
+                        <select className='input-control' id="setor" {...formik.getFieldProps('setor')}>
+                            <option value="administrativo" label="Administrativo" />
+                            <option value="fábrica" label="Fábrica" />
+                            <option value="loja" label="Loja" />
+                            <option value="portaria" label="Portaria" />
+                        </select>
                     {formik.touched.setor && formik.errors.setor ? (
                     <div className='error-message'>{formik.errors.setor}</div>
                     ) : null}
                 </div>
-                {error && <div>{error}</div>}
+
                 <button type="submit" className='primary-btn'>Cadastrar</button>
             
             </div>
@@ -113,4 +124,4 @@ const Cadastro = () => {
     );
 };
 
-export default Cadastro
+export default CadastroAdmin

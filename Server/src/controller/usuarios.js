@@ -1,5 +1,6 @@
 const express = require("express");
-const Usuarios = require("../model/usuarios");
+const Usuarios = require("../model/UserModel/usuarios");
+const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt");
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.get("/", async (req, res) => {
 });
 
 // Cadastrando um novo usuário
-router.post("/usuario/cadastro", async (req, res) => {
+router.post("/post", async (req, res) => {
     const { nome, sobrenome, email, senha, confirmacaoSenha, setor } = req.body;
 
     if (!nome || !sobrenome || !email || !senha || !confirmacaoSenha || !setor) {
@@ -50,36 +51,28 @@ router.post("/usuario/cadastro", async (req, res) => {
 });
 
 // Usuário cadastrado entrando 
-router.post("/usuario/entrar", async (req, res) => {
+router.post('/post/login', async (req, res) => {
     const { email, senha } = req.body;
-
-    console.log('Email recebido:', email);
-
-    if (!email || !senha) {
-        return res.status(400).json({ error: "Preencha todos os campos obrigatórios" });
-    }
-
+  
     try {
-        const usuario = await Usuarios.findOne({ where: { email } });
-
-        if (!usuario) {
-            console.log('Usuário não encontrado para o email:', email);
-            return res.status(401).json({ error: "Email ou senha incorretos" });
-        }
-
-        const senhaValida = await bcrypt.compare(senha, usuario.senha); // Comparando a senha fornecida com a senha hasheada
-
-        if (!senhaValida) {
-            console.log('Senha incorreta para o email:', email);
-            return res.status(401).json({ error: "Email ou senha incorretos" });
-        }
-
-        console.log('Login bem-sucedido para o email:', email);
-        return res.status(200).json({ message: "Login bem-sucedido", usuario });
+      const usuario = await Usuarios.findOne({ where: { email } });
+  
+      if (!usuario) {
+        return res.status(401).json({ error: 'Email ou senha incorretos' });
+      }
+  
+      const senhaValida = await bcrypt.compare(senha, usuario.senha);
+      if (!senhaValida) {
+        return res.status(401).json({ error: 'Email ou senha incorretos' });
+      }
+  
+      const token = jwt.sign({ id: usuario.user_id, email: usuario.email }, 'secret_key', { expiresIn: '1h' });
+      res.status(200).json({ message: "Login bem sucedido", usuario, token });
     } catch (error) {
-        console.error('Erro ao entrar na plataforma:', error);
-        return res.status(500).json({ error: "Erro ao entrar na plataforma", detalhes: error.message });
+      console.error('Erro ao autenticar usuário:', error);
+      res.status(500).json({ error: 'Erro interno do servidor', detalhes: error.message });
     }
-});
+  });
+  
 
 module.exports = router;
