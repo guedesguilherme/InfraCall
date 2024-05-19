@@ -1,2 +1,6 @@
-.home-admin-container{
+.home-content-admin{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
 }

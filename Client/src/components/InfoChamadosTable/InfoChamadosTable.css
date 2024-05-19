@@ -10,6 +10,9 @@
 
 .info-chamados-table th, .info-chamados-table td {
     border: 1px solid #ddd;
+    width: 45rem;
+    white-space: normal;
+    word-break: break-all;
     padding: 8px;
     text-align: left;
 }

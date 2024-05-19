@@ -38,6 +38,6 @@ const Admin = db.sequelize.define('Admin', {
 });
 
 // Descomente a linha abaixo se precisar criar a tabela baseada na definição do modelo
-// Admin.sync({ force: true });
+//Admin.sync({ force: true });
 
 module.exports = Admin;
