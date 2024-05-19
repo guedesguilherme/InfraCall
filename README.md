@@ -7,6 +7,8 @@ Para instalar:
 - cd client 
 - npm i
 - npm run dev
+- em um bd mysql crie a database "infracall"
+- descomente o "model.sync({ force: true});"
 
 
 
