@@ -5,24 +5,27 @@ import '../InfoChamadosTable/InfoChamadosTable.css';
 const InfoChamados = () => {
     const [data, setData] = useState([]);
     const [priorities, setPriorities] = useState({});
+    const [administrators, setAdministrators] = useState([]);
+    const [adminId, setAdminId] = useState(1); // Aqui você precisa definir o ID do administrador logado
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await AppFetch.get('/info');
-                console.log('Response data:', response.data);
+                const adminResponse = await AppFetch.get('/admin'); // Nova requisição para obter administradores
 
                 const initialData = response.data.reduce((acc, item) => {
                     acc[item.id_chamado] = {
                         prioridade: item.prioridade,
-                        situacao: item.situacao
+                        situacao: item.situacao,
+                        responsavel: item.responsavel // Adicionar campo responsável
                     };
                     return acc;
                 }, {});
-                console.log('Initial data:', initialData);
 
                 setData(response.data);
                 setPriorities(initialData);
+                setAdministrators(adminResponse.data); // Definir lista de administradores
             } catch (error) {
                 console.error('Erro ao buscar dados:', error);
             }
@@ -49,7 +52,8 @@ const InfoChamados = () => {
 
             await AppFetch.put(`/info/${id}/att`, {
                 prioridade: newPriority,
-                situacao: item.situacao
+                situacao: item.situacao,
+                responsavel: priorities[id]?.responsavel // Manter o responsável atual
             });
         } catch (error) {
             console.error('Erro ao atualizar prioridade:', error);
@@ -57,7 +61,7 @@ const InfoChamados = () => {
                 ...prevPriorities,
                 [id]: {
                     ...prevPriorities[id],
-                    prioridade: priorities[id].prioridade
+                    prioridade: prevPriorities[id]?.prioridade
                 }
             }));
         }
@@ -81,7 +85,8 @@ const InfoChamados = () => {
 
             await AppFetch.put(`/info/${id}/att`, {
                 prioridade: item.prioridade,
-                situacao: newSituation
+                situacao: newSituation,
+                responsavel: priorities[id]?.responsavel // Manter o responsável atual
             });
         } catch (error) {
             console.error('Erro ao atualizar situação:', error);
@@ -89,7 +94,30 @@ const InfoChamados = () => {
                 ...prevPriorities,
                 [id]: {
                     ...prevPriorities[id],
-                    situacao: priorities[id].situacao
+                    situacao: prevPriorities[id]?.situacao
+                }
+            }));
+        }
+    };
+
+    const handleResponsavelChange = async (id, newResponsavel) => {
+        try {
+            setPriorities(prevPriorities => ({
+                ...prevPriorities,
+                [id]: {
+                    ...prevPriorities[id],
+                    responsavel: newResponsavel
+                }
+            }));
+
+            await AppFetch.put(`/info/${id}/atribuir`, { responsavel: newResponsavel });
+        } catch (error) {
+            console.error('Erro ao atualizar responsável:', error);
+            setPriorities(prevPriorities => ({
+                ...prevPriorities,
+                [id]: {
+                    ...prevPriorities[id],
+                    responsavel: priorities[id].responsavel
                 }
             }));
         }
@@ -113,6 +141,7 @@ const InfoChamados = () => {
                         <th>Local Form</th>
                         <th>Prioridade</th>
                         <th>Situação</th>
+                        <th>Responsável</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -126,7 +155,7 @@ const InfoChamados = () => {
                             <td>{item.descricao_form}</td>
                             <td>{item.local_form}</td>
                             <td>
-                                <select 
+                                <select
                                     className='select-info-calls'
                                     value={priorities[item.id_chamado]?.prioridade}
                                     onChange={(e) => handlePriorityChange(item.id_chamado, parseInt(e.target.value))}
@@ -139,7 +168,7 @@ const InfoChamados = () => {
                                 </select>
                             </td>
                             <td>
-                                <select 
+                                <select
                                     className='select-info-calls'
                                     value={priorities[item.id_chamado]?.situacao}
                                     onChange={(e) => handleSituationChange(item.id_chamado, e.target.value)}
@@ -147,6 +176,20 @@ const InfoChamados = () => {
                                     <option value="Para fazer">Para fazer</option>
                                     <option value="Fazendo">Fazendo</option>
                                     <option value="Feito">Feito</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select
+                                    className='select-info-calls'
+                                    value={priorities[item.id_chamado]?.responsavel || ''}
+                                    onChange={(e) => handleResponsavelChange(item.id_chamado, parseInt(e.target.value))}
+                                >
+                                    <option value="">Selecione um responsável</option>
+                                    {administrators.map(admin => (
+                                        <option key={admin.admin_id} value={admin.admin_id}>
+                                            {admin.nome} {admin.sobrenome}
+                                        </option>
+                                    ))}
                                 </select>
                             </td>
                         </tr>

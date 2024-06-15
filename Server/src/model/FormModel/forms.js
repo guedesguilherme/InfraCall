@@ -2,6 +2,7 @@ const { DataTypes } = require('sequelize');
 const db = require('../Database/db');
 const Usuarios = require('../UserModel/usuarios');
 
+
 const Forms = db.sequelize.define('forms', {
     form_id: {
         type: DataTypes.INTEGER,
@@ -42,6 +43,7 @@ const Forms = db.sequelize.define('forms', {
 
 // Define the relationship between Forms and Usuarios
 Forms.belongsTo(Usuarios, { foreignKey: 'usuario', as: 'usuarioInfo' });
+
 
 //Forms.sync({ force: true });
 

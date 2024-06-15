@@ -5,14 +5,25 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 
 // Rota pública
-router.get('/', async (req, res) => {
+/*router.get('/', async (req, res) => {
     try {
         res.status(200).send({ message: 'Hello World' });
     } catch (error) {
         console.error(error);
         res.status(500).send({ error: 'Erro interno do servidor', detalhes: error.message });
     }
+});*/
+
+router.get('/', async (req, res) => {
+    try {
+        const admins = await Admin.findAll();
+        res.status(200).json(admins);
+    } catch (error) {
+        console.error('Erro ao listar administradores:', error);
+        res.status(500).json({ error: 'Erro ao listar administradores', detalhes: error.message });
+    }
 });
+
 
 // Cadastrando um novo usuário
 router.post('/post', async (req, res) => {
@@ -71,6 +82,30 @@ router.post('/post/login', async (req, res) => {
     } catch (error) {
         console.error('Erro ao autenticar usuário:', error);
         res.status(500).json({ error: 'Erro interno do servidor', detalhes: error.message });
+    }
+});
+
+router.get('/admins', async (req, res) => {
+    try {
+        const admins = await Admin.findAll({ attributes: ['admin_id', 'nome', 'sobrenome', 'email', 'setor'] });
+        res.status(200).json(admins);
+    } catch (error) {
+        console.error('Erro ao listar administradores:', error);
+        res.status(500).json({ error: 'Erro ao listar administradores', detalhes: error.message });
+    }
+});
+
+// Adicionando uma nova rota para atualizar o responsável do chamado
+router.put('/:idChamado/atribuir', async (req, res) => {
+    const { idChamado } = req.params;
+    const { responsavel } = req.body; // Espera receber o ID do administrador
+
+    try {
+        await InfoChamados.update({ responsavel }, { where: { id_chamado: idChamado } });
+        res.status(200).json({ message: 'Responsável atribuído com sucesso' });
+    } catch (error) {
+        console.error('Erro ao atribuir responsável ao chamado:', error);
+        res.status(500).json({ error: 'Erro ao atribuir responsável ao chamado', detalhes: error.message });
     }
 });
 
