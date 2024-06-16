@@ -2,6 +2,7 @@ import React from 'react'
 
 import InfoChamadosTable from '../../../components/InfoChamadosTable/InfoChamadosTable'
 import SidebarAdmin from '../../../components/SidebarAdmin/SidebarAdmin'
+import SearchAdmin from '../../../components/SearchAdmin/SearchAdmin'
 
 import "./HomeAdmin.css"
 

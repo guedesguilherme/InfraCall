@@ -24,6 +24,20 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:adminId', async (req, res) => {
+    const { adminId } = req.params;
+
+    try {
+        const chamados = await InfoChamados.findAll({
+            where: { responsavel: adminId }
+        });
+
+        res.status(200).json(chamados);
+    } catch (error) {
+        console.error('Erro ao buscar chamados atribuídos ao administrador:', error);
+        res.status(500).json({ error: 'Erro ao buscar chamados', details: error.message });
+    }
+});
 
 // Cadastrando um novo usuário
 router.post('/post', async (req, res) => {

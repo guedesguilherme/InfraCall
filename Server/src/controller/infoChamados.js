@@ -1,6 +1,8 @@
 const express = require('express');
 const { Op } = require("sequelize")
 const InfoChamados = require('../model/CallsModel/infoChamados');
+const Admin = require("./admin")
+const admin = require('../model/AdminModel/admin')
 
 const router = express.Router();
 
@@ -24,6 +26,22 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: 'Erro ao listar informações de chamados', details: error.message });
     }
 });
+
+router.get('/admin/:adminId', async (req, res) => {
+    const { adminId } = req.params;
+
+    try {
+        const chamados = await InfoChamados.findAll({
+            where: { responsavel: adminId }
+        });
+
+        res.status(200).json(chamados);
+    } catch (error) {
+        console.error('Erro ao buscar chamados atribuídos ao administrador:', error);
+        res.status(500).json({ error: 'Erro ao buscar chamados', details: error.message });
+    }
+});
+
 
 router.get('/done', async (req, res) => {
     try {
@@ -103,5 +121,26 @@ router.put('/:idChamado/atribuir', async (req, res) => {
     }
 });
 
+router.put('/:idChamado/solucao', async (req, res) => {
+    const { idChamado } = req.params;
+    const { solucao } = req.body;
+
+    try {
+        // Atualiza o campo solucao para o chamado com o idChamado especificado
+        const [rowsUpdated, [updatedChamado]] = await InfoChamados.update(
+            { solucao },
+            { returning: true, where: { id_chamado: idChamado } }
+        );
+
+        if (rowsUpdated === 0) {
+            return res.status(404).json({ error: 'Chamado não encontrado' });
+        }
+
+        res.status(200).json({ message: 'Solução do chamado atualizada com sucesso', chamado: updatedChamado });
+    } catch (error) {
+        console.error('Erro ao atualizar solução do chamado:', error);
+        res.status(500).json({ error: 'Erro ao atualizar solução do chamado', details: error.message });
+    }
+});
 
 module.exports = router;

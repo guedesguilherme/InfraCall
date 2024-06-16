@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const db = require('../Database/db');
+const InfoChamados = require("../CallsModel/infoChamados")
 
 const Admin = db.sequelize.define('Admin', {
     admin_id: {
@@ -36,6 +37,8 @@ const Admin = db.sequelize.define('Admin', {
     freezeTableName: true,
     tableName: 'admins'
 });
+
+//Admin.belongsTo(InfoChamados, { foreignKey: 'responsavel', as: 'responsavelInfo' });
 
 // Descomente a linha abaixo se precisar criar a tabela baseada na definição do modelo
 //Admin.sync({ force: true });
